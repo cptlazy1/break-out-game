@@ -55,7 +55,7 @@ game_state = "playing"
 def handle_click(x, y):
     global game_state, score, lives
     if game_state == "game_over":
-        if (-100 < x < 100) and (-80 < y < -20):
+        if (-100 < x < 100) and (-65 < y < -25):
             # Restart the game!
             score = 0
             lives = 3
@@ -71,6 +71,9 @@ def handle_click(x, y):
             
             create_bricks()
             game_state = "playing"
+        elif (-100 < x < 100) and (-105 < y < -65):
+            wn.bye()  # Close the game window
+
 
 wn.onscreenclick(handle_click)
 
@@ -115,8 +118,12 @@ while True:
                 button_pen.goto(0, -60)
                 button_pen.write("[ PLAY AGAIN ]", align="center", font=("Courier", 24, "normal"))
 
+                button_pen.goto(0, -100)
+                button_pen.write(" [ QUIT ] ", align="center", font=("Courier", 24, "normal"))
+
         # Paddle and ball collisions
-        if (game_ball.ycor() < -340 and game_ball.ycor() > -350) and (game_ball.xcor() < player_paddle.xcor() + 50 and game_ball.xcor() > player_paddle.xcor() - 50):
+        if (-340 > game_ball.ycor() > -350) and (
+                player_paddle.xcor() + 50 > game_ball.xcor() > player_paddle.xcor() - 50):
             game_ball.sety(-340)
             game_ball.dy *= -1
 
