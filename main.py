@@ -115,6 +115,7 @@ while True:
                 player_paddle.goto(1000, 1000)
                 for b in bricks:
                     b.goto(1000, 1000)
+                bricks.clear()
                 
                 pen.goto(0, 0)
                 pen.write("GAME OVER", align="center", font=("Courier", 36, "bold"))
