@@ -1,4 +1,5 @@
 import turtle
+import random
 from paddle import Paddle
 from ball import Ball
 from brick import Brick
@@ -21,57 +22,112 @@ wn.onkeyrelease(player_paddle.stop_left, "Left")
 wn.onkeypress(player_paddle.start_right, "Right")
 wn.onkeyrelease(player_paddle.stop_right, "Right")
 
-# Score System
+# Score and Lives System
 score = 0
+lives = 3
 pen = turtle.Turtle()
 pen.color("white")
 pen.penup()
 pen.hideturtle()
 pen.goto(0, 360)
-pen.write("Score: 0", align="center", font=("Courier", 24, "normal"))
+pen.write(f"Score: {score}  Lives: {lives}", align="center", font=("Courier", 24, "normal"))
 
-# Create Bricks
+# Game Over elements
+button_pen = turtle.Turtle()
+button_pen.color("white")
+button_pen.penup()
+button_pen.hideturtle()
+
 bricks = []
-for y in range(250, 100, -30):
-    for x in range(-250, 260, 70):
-        new_brick = Brick(x, y)
-        bricks.append(new_brick)
+color_list = ["red", "blue", "green", "yellow", "orange"]
+def create_bricks():
+    for brick in bricks:
+        brick.goto(1000, 1000)
+    bricks.clear()
+    for y in range(250, 100, -30):
+        for x in range(-250, 260, 70):
+            new_brick = Brick(x, y, random.choice(color_list))
+            bricks.append(new_brick)
+
+create_bricks()
+game_state = "playing"
+
+def handle_click(x, y):
+    global game_state, score, lives
+    if game_state == "game_over":
+        if (-100 < x < 100) and (-80 < y < -20):
+            # Restart the game!
+            score = 0
+            lives = 3
+            pen.clear()
+            pen.goto(0, 360)
+            pen.write(f"Score: {score}  Lives: {lives}", align="center", font=("Courier", 24, "normal"))
+            button_pen.clear()
+            
+            player_paddle.goto(0, -350)
+            game_ball.goto(0, 0)
+            game_ball.dx = 2
+            game_ball.dy = -2
+            
+            create_bricks()
+            game_state = "playing"
+
+wn.onscreenclick(handle_click)
 
 # Main game loop
 while True:
     wn.update()
-    game_ball.move()
-    player_paddle.move()
+    
+    if game_state == "playing":
+        game_ball.move()
+        player_paddle.move()
 
-    # Border checking
-    if game_ball.xcor() > 290:
-        game_ball.setx(290)
-        game_ball.dx *= -1
-        
-    if game_ball.xcor() < -290:
-        game_ball.setx(-290)
-        game_ball.dx *= -1
-        
-    if game_ball.ycor() > 390:
-        game_ball.sety(390)
-        game_ball.dy *= -1
-        
-    if game_ball.ycor() < -390:
-        game_ball.goto(0, 0)
-        game_ball.dy *= -1 # reverse direction to start fresh
-
-    # Paddle and ball collisions
-    if (game_ball.ycor() < -340 and game_ball.ycor() > -350) and (game_ball.xcor() < player_paddle.xcor() + 50 and game_ball.xcor() > player_paddle.xcor() - 50):
-        game_ball.sety(-340)
-        game_ball.dy *= -1
-
-    # Brick collisions
-    for brick in bricks:
-        if game_ball.distance(brick) < 35:
-            brick.goto(1000, 1000) # Move off screen
-            bricks.remove(brick)
-            score += 10
-            pen.clear()
-            pen.write(f"Score: {score}", align="center", font=("Courier", 24, "normal"))
+        # Border checking
+        if game_ball.xcor() > 290:
+            game_ball.setx(290)
+            game_ball.dx *= -1
+            
+        if game_ball.xcor() < -290:
+            game_ball.setx(-290)
+            game_ball.dx *= -1
+            
+        if game_ball.ycor() > 390:
+            game_ball.sety(390)
             game_ball.dy *= -1
-            break # Only hit one brick per frame
+            
+        if game_ball.ycor() < -390:
+            lives -= 1
+            pen.clear()
+            pen.write(f"Score: {score}  Lives: {lives}", align="center", font=("Courier", 24, "normal"))
+            game_ball.goto(0, 0)
+            game_ball.dy *= -1
+            
+            if lives == 0:
+                game_state = "game_over"
+                game_ball.goto(1000, 1000)
+                player_paddle.goto(1000, 1000)
+                for b in bricks:
+                    b.goto(1000, 1000)
+                
+                pen.goto(0, 0)
+                pen.write("GAME OVER", align="center", font=("Courier", 36, "bold"))
+                
+                button_pen.goto(0, -60)
+                button_pen.write("[ PLAY AGAIN ]", align="center", font=("Courier", 24, "normal"))
+
+        # Paddle and ball collisions
+        if (game_ball.ycor() < -340 and game_ball.ycor() > -350) and (game_ball.xcor() < player_paddle.xcor() + 50 and game_ball.xcor() > player_paddle.xcor() - 50):
+            game_ball.sety(-340)
+            game_ball.dy *= -1
+
+        # Brick collisions
+        for brick in bricks:
+            if game_ball.distance(brick) < 35:
+                brick.goto(1000, 1000)
+                bricks.remove(brick)
+                score += 10
+                pen.clear()
+                pen.goto(0, 360)
+                pen.write(f"Score: {score}  Lives: {lives}", align="center", font=("Courier", 24, "normal"))
+                game_ball.dy *= -1
+                break
