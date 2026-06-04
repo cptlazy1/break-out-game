@@ -70,8 +70,8 @@ def handle_click(x, y):
             
             player_paddle.goto(0, -350)
             game_ball.goto(0, 0)
-            game_ball.dx = 2
-            game_ball.dy = -2
+            game_ball.dx = 1.5
+            game_ball.dy = -1.5
             
             create_bricks()
             game_state = "playing"
