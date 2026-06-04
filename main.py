@@ -53,6 +53,10 @@ create_bricks()
 game_state = "playing"
 
 def handle_click(x, y):
+    """
+    Fired automatically when the screen is clicked.
+    Checks if the (x, y) click coordinates fall inside our invisible UI button bounding boxes.
+    """
     global game_state, score, lives
     if game_state == "game_over":
         if (-100 < x < 100) and (-65 < y < -25):
@@ -122,6 +126,7 @@ while True:
                 button_pen.write(" [ QUIT ] ", align="center", font=("Courier", 24, "normal"))
 
         # Paddle and ball collisions
+        # We check both Y-height (is it touching the paddle) and X-width (is it within the 100px width)
         if (-340 > game_ball.ycor() > -350) and (
                 player_paddle.xcor() + 50 > game_ball.xcor() > player_paddle.xcor() - 50):
             game_ball.sety(-340)

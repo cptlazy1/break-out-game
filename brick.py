@@ -2,6 +2,10 @@ import turtle
 
 
 class Brick(turtle.Turtle):
+    """
+    A single target block. We move these off-screen when "destroyed" 
+    because completely deleting objects in Turtle is complex.
+    """
     def __init__(self, x, y, color):
         super().__init__()
         self.shape("square")

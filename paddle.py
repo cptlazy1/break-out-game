@@ -1,6 +1,10 @@
 import turtle
 
 class Paddle(turtle.Turtle):
+    """
+    The player-controlled paddle. Inherits from turtle.Turtle.
+    Uses boolean flags for smooth, continuous movement per frame.
+    """
     def __init__(self):
         super().__init__()
         self.shape("square")
@@ -25,6 +29,7 @@ class Paddle(turtle.Turtle):
         self.is_moving_right = False
 
     def move(self):
+        """Moves the paddle each frame, clamping X-coordinates so it doesn't leave the screen."""
         if self.is_moving_left:
             new_x = self.xcor() - 5  # Smaller step because it updates every frame now
             if new_x < -250:
