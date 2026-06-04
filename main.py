@@ -70,8 +70,8 @@ def handle_click(x, y):
             
             player_paddle.goto(0, -350)
             game_ball.goto(0, 0)
-            game_ball.dx = 1.5
-            game_ball.dy = -1.5
+            game_ball.dx = 0.5
+            game_ball.dy = -0.5
             
             create_bricks()
             game_state = "playing"
@@ -143,4 +143,18 @@ while True:
                 pen.goto(0, 360)
                 pen.write(f"Score: {score}  Lives: {lives}", align="center", font=("Courier", 24, "normal"))
                 game_ball.dy *= -1
+                
+                if len(bricks) == 0:
+                    game_state = "game_over"
+                    game_ball.goto(1000, 1000)
+                    player_paddle.goto(1000, 1000)
+                    
+                    pen.goto(0, 0)
+                    pen.write("WINNER!", align="center", font=("Courier", 36, "bold"))
+                    
+                    button_pen.goto(0, -60)
+                    button_pen.write("[ PLAY AGAIN ]", align="center", font=("Courier", 24, "normal"))
+                    button_pen.goto(0, -100)
+                    button_pen.write(" [ QUIT ] ", align="center", font=("Courier", 24, "normal"))
+                
                 break

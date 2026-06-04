@@ -36,7 +36,7 @@ class Paddle(turtle.Turtle):
                 new_x = -250
             self.setx(new_x)
         if self.is_moving_right:
-            new_x = self.xcor() + 5
+            new_x = self.xcor() + 3
             if new_x > 250:
                 new_x = 250
             self.setx(new_x)

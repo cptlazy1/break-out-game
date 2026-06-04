@@ -11,8 +11,8 @@ class Ball(turtle.Turtle):
         self.color("white")
         self.penup()
         # Movement speeds
-        self.dx = 1.5
-        self.dy = 1.5
+        self.dx = 0.5
+        self.dy = 0.5
         
     def move(self):
         self.setx(self.xcor() + self.dx)
